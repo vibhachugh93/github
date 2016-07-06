@@ -1,6 +1,7 @@
 package com.qait.gitautomation.getPageobjects;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +34,7 @@ public class CloneRepositoryPage
 		PageFactory.initElements(driver, this);
   }
   
-  public String CloneRepository()
+  public String CloneRepository() throws IOException
   {
 	  RepositoryData obj=new RepositoryData();
 	  this.cloneButton.click();
@@ -43,6 +44,7 @@ public class CloneRepositoryPage
 	  driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 	  System.out.println("Clone Link"+cloneLink);
 	  File clonedrepo= new File("/home/vibhachugh/Desktop/"+obj.getNewRepositoryName());
+	  clonedrepo.createNewFile();
 	  return cloneLink;
 	  //this.getRepoUrl.getText();
 	  

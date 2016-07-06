@@ -37,8 +37,10 @@ public class CommitPage
 			e.printStackTrace();
   }
  
-  
-   String commitID=commitIdsButtons.get(0).getAttribute("data-clipboard-text");
-   return commitID;
+	
+	   String commitID;
+	   commitID= commitIdsButttons.get(0).getAttribute("data-clipboard-text");
+	   //String commitID=commitIdsButtons.get(0).getAttribute("data-clipboard-text");
+	   return commitID;
 }
 }

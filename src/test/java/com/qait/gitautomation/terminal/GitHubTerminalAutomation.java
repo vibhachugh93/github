@@ -2,6 +2,11 @@ package com.qait.gitautomation.terminal;
 import java.io.*;
 //import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
 //import org.openqa.selenium.WebDriver;
 //import org.openqa.selenium.WebElement;
 //import org.openqa.selenium.support.FindBy;
@@ -14,43 +19,85 @@ import com.qait.gitautomation.getPageobjects.SignInPage;
 //import com.qait.gitautomation.userinfo.UserCredentials;
 
 public class GitHubTerminalAutomation
+{File file;
+public FileWriter fw;
+public BufferedWriter bw;
+WebDriver driver;
+public String sys_user;
+
+public String sys;
+public Process p;
+public GitHubTerminalAutomation(WebDriver driver)
 {
-	public File file;
-	public FileWriter fw;
-	public PrintWriter write;
-	SignInPage signIn;
-	CreateNewRepositoryPage newRepo;
+	this.driver=driver;
+    PageFactory.initElements(driver, this);
+	}
+	
+
+	@FindBy(css=".form-control.js-git-clone-help-field.url-field.js-zeroclipboard-target")
+	WebElement cloneurl;
 	
 	public void createShellFile() throws IOException{
-		file = new File("clone_repo.sh");
+		file = new File("executor.sh");
 		file.createNewFile();
 	    file.setExecutable(true);
-	    file.setWritable(true);		
-	}
-	public void execute( String cloneURL, String userN, String passW) throws IOException{
-		String url= cloneURL;
-		String user= userN;
-		String pass= passW;
-		String push= "http://"+user+":"+pass+"@github.com/"+user+"/abc.git master";
-		System.out.println(push);
+	    file.setWritable(true);
 		fw = new FileWriter(file.getAbsoluteFile());
-		System.out.println(file.getAbsoluteFile());
-		write = new PrintWriter(fw);
-		//write.write("Hello");
-		write.println("#!/bin/bash");
-		write.println("cd ~");		
-		write.println("git clone "+url );
-		write.println("cd abc");
-		write.println("gedit >'Hello'");
-		write.println("git status");
-		write.println("git add .");
-		write.println("git commit -m'First Commit'");
-		write.println("git status");
-		write.println("git push "+push);
-		write.println("git config --global credential.helper cache");
-		write.close();
-		//write.println("git push http://"+log.user+":"+log.pass+"@github.com/qaitautomation/Test_Repository.git master");
-		
+		bw = new BufferedWriter(fw);	
+		sys_user=System.getProperty("user.name");
+	    System.out.println(sys_user);
+	    sys=System.getProperty("os.name");
+	    System.out.println(sys);
 	}
-	
+	public void execute() throws IOException, InterruptedException{
+		 if(sys.equalsIgnoreCase("Linux"))
+		 {
+			String repname=Utility.getConfigValue("repository");
+			String url=cloneurl.getAttribute("value");
+			String user=Utility.getConfigValue("usernamescript");
+			String pass=Utility.getConfigValue("passwordscript");
+			System.out.println(file.canWrite());
+			System.out.println(file.canExecute());
+			System.out.println(url);
+			bw.write("#!/bin/bash");
+			bw.write("cd ~");
+			bw.write("git clone "+url);
+			bw.write("cd "+repname);
+			bw.write("gedit >'Hello'");
+			bw.write("git status");
+			bw.write("git add .");
+			bw.write("git commit -m'First Commit'");
+			bw.write("git status");
+			bw.write("git push http://"+user+":"+pass+"@github.com/"+user+"/"+repname+".git master");
+			bw.close();
+		}
+		else
+		{
+		 	PrintWriter writer;
+	    	file = new File("executor.bat");
+	    	file.createNewFile();
+	        file.setExecutable(true);
+	        file.setWritable(true);
+	        writer = new PrintWriter(fw);
+	       	String repname=Utility.getConfigValue("repository");
+	        String url=cloneurl.getAttribute("value");
+	        String user=Utility.getConfigValue("usernamescript");
+	        String pass=Utility.getConfigValue("passwordscript");
+	        writer.println("C:");
+	        writer.println("cd users");
+	        writer.println("cd "+sys_user);
+	        writer.println("cd Desktop");
+	        writer.println("git clone "+url);
+	        writer.println("cd "+repname);
+	        writer.println("type nul > hello");
+	        writer.println("git add .");
+	        writer.println("git status");
+	        writer.println("git commit -m 'First Commit'");
+	        writer.println("git status");
+	        writer.println("git push http://"+user+":"+pass+"@github.com/"+user+"/"+repname+".git");
+	        writer.close();	
+	        p=new ProcessBuilder("./executor.bat").start();
+	        p.waitFor();
+	    }
+    }
 }

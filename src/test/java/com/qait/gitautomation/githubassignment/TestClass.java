@@ -6,6 +6,7 @@ package com.qait.gitautomation.githubassignment;
 import com.qait.gitautomation.userinfo.UserCredentials;
 import com.qait.gitautomation.userinfo.RepositoryData;
 
+import java.io.IOException;
 
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
@@ -63,7 +64,7 @@ public class TestClass
 	  }
 	  
 	   @Test(priority=5)
-	   public void TC05_cloneLinkCheck(){
+	   public void TC05_cloneLinkCheck() throws IOException{
 	    String expectedUrl="https://github.com/vibhachugh/NewRepository.git";  
 	    String cloneLinkTitle=test.cloneRepo.CloneRepository(); 
 	    Assert.assertEquals(expectedUrl, cloneLinkTitle,"Failed to copy new repository clone Link");
@@ -75,4 +76,31 @@ public class TestClass
 	  	  boolean commitStatus=test.commitid.checkCommitMsg(); 
 	  	  Assert.assertTrue(commitStatus,"Failed to Commit");
 	    }*/
+	   @Test(priority=6)
+	   public void shellCommands() throws IOException, InterruptedException
+	   {
+	  // GitHubTerminalAutomation script=new  GitHubTerminalAutomation(driver);
+	   test.shellscript.createShellFile();
+	   test.shellscript.execute();
+	   }		
+	   	
+	   	
+      @Test(dependsOnMethods={"shellCommands"})
+	   public void executeCommands()
+	   {
+	   //ExecuteShellCommands exec=new ExecuteShellCommands();
+	   test.executecommands.execute();
+	   System.out.println("done");
+	   	}
+	  @Test(priority=7)
+	  public void githubapi()
+	  {
+		 test.p.createRepoUsingApi();
+		  
+	  }
+
 }
+
+
+
+

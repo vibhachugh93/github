@@ -9,10 +9,15 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 
 import com.qait.gitautomation.getPageobjects.CloneRepositoryPage;
+import com.qait.gitautomation.getPageobjects.CommitPage;
 //import com.qait.gitautomation.getPageobjects.CommitPage;
 import com.qait.gitautomation.getPageobjects.CreateNewRepositoryPage;
 import com.qait.gitautomation.getPageobjects.DeleteRepositoryPage;
 import com.qait.gitautomation.getPageobjects.SignInPage;
+import com.qait.gitautomation.githubapi.GithubApi;
+import com.qait.gitautomation.terminal.ExecuteShellCommands;
+import com.qait.gitautomation.terminal.GitHubTerminalAutomation;
+import com.qait.gitautomation.terminal.Utility;
 
 public class TestSessionInitiator 
 {
@@ -24,7 +29,12 @@ public class TestSessionInitiator
   public CreateNewRepositoryPage newRepo;
   public DeleteRepositoryPage deleteRepo;
   public CloneRepositoryPage cloneRepo;
-  //public CommitPage  commitid;
+  public CommitPage  commitid;
+  public Utility util;
+  public GitHubTerminalAutomation shellscript;
+  public ExecuteShellCommands executecommands;
+  public GithubApi p;
+  
 
   public TestSessionInitiator()
   {
@@ -49,8 +59,11 @@ public class TestSessionInitiator
 		newRepo=new CreateNewRepositoryPage(driver);
 		deleteRepo=new DeleteRepositoryPage(driver);
 		cloneRepo=new CloneRepositoryPage(driver);
-		//commitid=new CommitPage(driver);
-		
+		commitid=new CommitPage(driver);
+		util= new Utility();
+		shellscript=new GitHubTerminalAutomation(driver);
+		executecommands=new ExecuteShellCommands();
+	    p=new GithubApi();
 	  }
 	  public void testInitiator()
 	  {
